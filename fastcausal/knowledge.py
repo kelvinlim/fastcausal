@@ -121,11 +121,13 @@ def dict_to_knowledge(knowledge_dict: Optional[dict]) -> Optional[Knowledge]:
     k = Knowledge()
 
     if "addtemporal" in knowledge_dict:
+        forbidden_within = knowledge_dict.get("forbidden_within", set())
         for tier, variables in knowledge_dict["addtemporal"].items():
             tier_int = int(tier)
             for var in variables:
                 k.add_to_tier(tier_int, var)
-            k.set_tier_forbidden_within(tier_int, True)
+            if tier_int in forbidden_within:
+                k.set_tier_forbidden_within(tier_int, True)
 
     if "forbiddirect" in knowledge_dict:
         for from_var, to_var in knowledge_dict["forbiddirect"]:
