@@ -11,6 +11,34 @@ This document details the implementation plan for combining cda_tools2, fastcda,
 - **Config version:** Introduce v5.0 format; accept v4.0 with deprecation warning
 - **tetrad-port PyPI:** Publication in progress (cibuildwheel configured)
 
+## Implementation Status
+
+| Phase | Status | Date |
+|-------|--------|------|
+| Phase 1: Foundation | **Complete** | 2026-03-07 |
+| Phase 2: Core API | **Complete** | 2026-03-07 |
+| Phase 3: Visualization | **Complete** | 2026-03-07 |
+| Phase 4: Batch Pipeline and CLI | **Complete** | 2026-03-07 |
+| Phase 5: Testing and Documentation | **Complete** | 2026-03-07 |
+| Phase 6: Publication and Deprecation | Pending | — |
+
+### Test Suite Summary (130 tests)
+
+| Test file | Tests | Coverage area |
+|-----------|-------|---------------|
+| test_pipeline.py | 33 | parse steps, metrics, paths effect matrix |
+| test_knowledge.py | 14 | lag knowledge, prior file parsing, dict_to_knowledge |
+| test_config.py | 14 | v5 loading, v4→v5 migration, directories, params |
+| test_viz.py | 13 | node styling (fnmatch), graph rendering, save/show |
+| test_cli.py | 12 | help output, version, required args, analyze command |
+| test_core.py | 11 | data loading, transforms, search, end-to-end workflow |
+| test_transform.py | 10 | lag columns, standardize, subsample, jitter |
+| test_edges.py | 9 | edge extraction, selection/dedup, graph info parsing |
+| test_search.py | 8 | PC, FGES, GFCI execution, knowledge, parameters |
+| test_sem.py | 6 | lavaan model conversion |
+
+All 119 tests pass; 11 are skipped (require optional `networkx` dependency).
+
 ---
 
 ## Table of Contents
@@ -142,7 +170,7 @@ results, graph = fc.run_search(
     algorithm="gfci",                            # "pc", "fges", "gfci"
     alpha=0.05,
     penalty_discount=1.0,
-    knowledge="auto",                            # auto-detect lag structure
+    knowledge=fc.create_lag_knowledge(df.columns), # temporal tiers
     run_sem=True,                                # fit SEM automatically
 )
 
@@ -246,7 +274,7 @@ The DgraphFlex graph object is returned with edges already decorated with SEM re
 
 ---
 
-## Phase 1: Foundation
+## Phase 1: Foundation ✅
 
 **Goal:** Get tetrad-port on PyPI and create the fastcausal skeleton.
 
@@ -306,7 +334,7 @@ fastcausal = "fastcausal.cli:main"
 
 ---
 
-## Phase 2: Core API
+## Phase 2: Core API ✅
 
 **Goal:** Implement `FastCausal` class with search, SEM, and data transformation — replacing fastcda for interactive use.
 
@@ -431,7 +459,7 @@ The `knowledge` parameter defaults to `None` (no prior knowledge). Users explici
 
 ---
 
-## Phase 3: Visualization
+## Phase 3: Visualization ✅
 
 **Goal:** Port fastcda's visualization capabilities, using dgraph_flex as the rendering engine.
 
@@ -476,7 +504,7 @@ Note: The config-driven orchestration that reads `pathsdata.json` and the PATHS 
 
 ---
 
-## Phase 4: Batch Pipeline and CLI
+## Phase 4: Batch Pipeline and CLI ✅
 
 **Goal:** Port cda_tools2's config-driven batch processing into fastcausal CLI commands.
 
@@ -484,22 +512,16 @@ Note: The config-driven orchestration that reads `pathsdata.json` and the PATHS 
 
 Port config.yaml parsing from cda_tools2:
 
-- Parse v4.0 config format (GLOBAL, PREP, CAUSAL, SEM, GRAPHS, PATHS sections)
+- Parse v5.0 config format (GLOBAL, PREP, CAUSAL, SEM, GRAPHS, PATHS sections)
+- Accept v4.0 format with deprecation warning and automatic mapping of `causal-cmd` sub-key to flat format
 - Validate config structure
 - Resolve directory paths relative to project folder
 
-Key change: The CAUSAL section no longer needs `causal-cmd` configuration (Java paths, cmdpath, version). Replace with a simpler `algorithm` block:
-
 ```yaml
-# Old (cda_tools2)
-CAUSAL:
-  causal-cmd:
-    algorithm: gfci
-    cmdpath: /Users/kolim/bin
-    version: 1.11.1
-    ...
-
-# New (fastcausal) — backwards compatible, old format still parsed
+# v5.0 (new default)
+GLOBAL:
+  version: 5.0
+  ...
 CAUSAL:
   algorithm: gfci
   alpha: 0.05
@@ -637,7 +659,7 @@ def analyze(datafile, algorithm, alpha, output):
 
 ---
 
-## Phase 5: Testing and Documentation
+## Phase 5: Testing and Documentation ✅
 
 ### 5.1 Testing strategy
 
@@ -763,10 +785,7 @@ fastcausal will support cda_tools2's v4.0 config format with these changes:
 - `CAUSAL` — simplified, Java-specific fields ignored:
 
 ```yaml
-# These fields are still parsed but ignored (backwards compat):
-#   causal-cmd, cmdpath, version, jarautopath
-
-# These fields are used:
+# v5.0 format (new):
 CAUSAL:
   algorithm: gfci           # pc, fges, gfci
   alpha: 0.05
@@ -776,16 +795,22 @@ CAUSAL:
   knowledge: prior.txt
   standardize_cols: true
   jitter: 0.001
+```
 
-  # Legacy format also accepted:
+```yaml
+# v4.0 format (legacy, accepted with deprecation warning):
+# Java-specific fields (causal-cmd, cmdpath, version, jarautopath) are parsed but ignored.
+CAUSAL:
   causal-cmd:
     algorithm: gfci
     alpha: 0.05
     penaltyDiscount: 1.0
+    cmdpath: /Users/kolim/bin
+    version: 1.11.1
     ...
 ```
 
-The config parser will detect whether the old `causal-cmd` sub-key format or the new flat format is used and handle both.
+The config parser checks `GLOBAL.version`. If `4.0`, it emits a deprecation warning and maps the old `causal-cmd` sub-key format to the new flat format internally. If `5.0`, it uses the new format directly.
 
 ---
 
