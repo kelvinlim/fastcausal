@@ -18,7 +18,8 @@ class FastCausal:
 
     Provides a unified interface for:
     - Loading and transforming data
-    - Running causal discovery algorithms (PC, FGES, GFCI)
+    - Running causal discovery algorithms (PC, FGES, GFCI, BOSS, BOSS-FCI,
+      GRaSP, GRaSP-FCI)
     - Fitting structural equation models (SEM)
     - Visualizing causal graphs
 
@@ -105,13 +106,35 @@ class FastCausal:
         df : pd.DataFrame
             Continuous numeric data.
         algorithm : str
-            One of "pc", "fges", "gfci".
+            One of "pc", "fges", "gfci", "boss", "boss_fci", "grasp",
+            "grasp_fci".
         knowledge : dict or None
             Prior knowledge dict (e.g. from create_lag_knowledge).
         run_sem : bool
             If True, fit a SEM and decorate the graph with results.
-        **kwargs
-            Additional algorithm parameters (alpha, penalty_discount, etc.)
+
+        Algorithm-Specific Parameters (via **kwargs)
+        ---------------------------------------------
+        PC:
+            alpha=0.05, depth=-1
+        FGES:
+            penalty_discount=1.0, max_degree=-1, faithfulness_assumed=True
+        GFCI:
+            alpha=0.05, penalty_discount=1.0, depth=-1, max_degree=-1,
+            complete_rule_set=True, max_disc_path_length=-1
+        BOSS:
+            penalty_discount=1.0, use_bes=False, num_starts=1
+        BOSS-FCI:
+            alpha=0.05, penalty_discount=1.0, depth=-1,
+            complete_rule_set=True, use_bes=False, num_starts=1
+        GRaSP:
+            penalty_discount=1.0, depth=3, uncovered_depth=1,
+            non_singular_depth=1, num_starts=1
+        GRaSP-FCI:
+            alpha=0.05, penalty_discount=1.0, depth=-1, grasp_depth=3,
+            complete_rule_set=True, num_starts=1
+
+        See ``fastcausal.search.run_algorithm`` for full parameter details.
 
         Returns
         -------
@@ -162,7 +185,8 @@ class FastCausal:
         df : pd.DataFrame
             Continuous numeric data.
         algorithm : str
-            One of "pc", "fges", "gfci".
+            One of "pc", "fges", "gfci", "boss", "boss_fci", "grasp",
+            "grasp_fci".
         runs : int
             Number of bootstrap iterations.
         min_fraction : float
@@ -174,7 +198,8 @@ class FastCausal:
         run_sem : bool
             If True, fit a SEM on stable edges.
         **kwargs
-            Additional algorithm parameters.
+            Algorithm-specific parameters. Same as ``run_search()``.
+            See ``fastcausal.search.run_algorithm`` for full details.
 
         Returns
         -------

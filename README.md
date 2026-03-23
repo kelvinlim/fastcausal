@@ -13,7 +13,7 @@ Fast, easy-to-use causal discovery analysis tools for Python.
 Key features:
 
 - **No Java dependency** — uses [tetrad-port](https://github.com/kelvinlim/tetrad-port) (C++ port of Tetrad algorithms) instead of Java
-- **Three causal discovery algorithms** — PC, FGES, GFCI
+- **Seven causal discovery algorithms** — PC, FGES, GFCI, BOSS, BOSS-FCI, GRaSP, GRaSP-FCI
 - **Prior knowledge support** — temporal tiers, forbidden/required edges
 - **Bootstrapped stability analysis** — edge frequency selection across subsampled runs
 - **SEM fitting** — automatic structural equation modeling via semopy
@@ -107,11 +107,17 @@ fastcausal analyze data.csv --algorithm gfci --output results/
 
 ## Supported Algorithms
 
-| Algorithm | Description | Key Parameters |
-|-----------|-------------|----------------|
-| **PC** | Constraint-based, uses conditional independence tests | `alpha` |
-| **FGES** | Score-based, greedy search with BIC scoring | `penalty_discount` |
-| **GFCI** | Hybrid constraint + score-based | `alpha`, `penalty_discount` |
+| Algorithm | Type | Output | Key Parameters |
+|-----------|------|--------|----------------|
+| **PC** | Constraint-based (Fisher Z) | CPDAG | `alpha` |
+| **FGES** | Score-based (BIC) | CPDAG | `penalty_discount` |
+| **GFCI** | Hybrid (FGES + FCI rules) | PAG | `alpha`, `penalty_discount` |
+| **BOSS** | Permutation-based (BIC) | CPDAG | `penalty_discount` |
+| **BOSS-FCI** | BOSS + FCI rules | PAG | `alpha`, `penalty_discount` |
+| **GRaSP** | Permutation-based (tuck DFS) | CPDAG | `penalty_discount` |
+| **GRaSP-FCI** | GRaSP + FCI rules | PAG | `alpha`, `penalty_discount` |
+
+See the [Algorithm Guide](docs/algorithms.md) for detailed parameter reference, edge types, and selection guidance.
 
 ## Architecture
 
@@ -134,7 +140,7 @@ tetrad-port    dgraph_flex
 ```
 fastcausal/
 ├── core.py              # FastCausal class (main API)
-├── search.py            # Algorithm wrapper (PC, FGES, GFCI)
+├── search.py            # Algorithm wrapper (PC, FGES, GFCI, BOSS, GRaSP, ...)
 ├── sem.py               # SEM fitting via semopy
 ├── transform.py         # Lag columns, standardization, subsampling
 ├── knowledge.py         # Prior knowledge handling
@@ -158,8 +164,10 @@ fastcausal/
 
 ## Documentation
 
+- [Algorithm Guide](docs/algorithms.md) — Algorithm selection, parameters, edge types, prior knowledge
+- [Migration from fastcda](docs/migration_from_fastcda.md) — API mapping for fastcda users
+- [Migration from cda_tools2](docs/migration_from_cda_tools2.md) — CLI mapping for cda_tools2 users
 - [Consolidation Plan](ConsolidationPlan.md) — Implementation plan and phase status
-- [Consolidation Recommendation](ConsolidationRecommendation.md) — Architecture decision record
 - [Project Conventions](CLAUDE.md) — Development guidelines and conventions
 
 ## Config File Format

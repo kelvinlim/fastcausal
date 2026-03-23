@@ -1,0 +1,56 @@
+digraph {
+	node [color=black shape=oval]
+	dpi=300
+	PANAS_NA -> PHQ9 [label="0.291
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	PANAS_NA -> worry_scale [label="-0.106
+0.000" arrowhead=normal arrowtail=none color=red dir=both]
+	PANAS_NA_lag -> PANAS_NA [label="0.853
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	PANAS_NA_lag -> worry_scale_lag [label="" arrowhead=odot arrowtail=odot color=black dir=both]
+	PANAS_PA -> PANAS_PA_lag [label="" arrowhead=normal arrowtail=normal color=black dir=both]
+	PHQ9 -> PANAS_PA [label="-0.388
+0.000" arrowhead=normal arrowtail=none color=red dir=both]
+	PHQ9_lag -> PANAS_NA_lag [label="" arrowhead=odot arrowtail=odot color=black dir=both]
+	PHQ9_lag -> PANAS_PA_lag [label="-0.384
+0.000" arrowhead=normal arrowtail=none color=red dir=both]
+	PHQ9_lag -> PHQ9 [label="0.666
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	TIB -> TST [label="" arrowhead=normal arrowtail=normal color=black dir=both]
+	TIB_lag -> TIB [label="0.463
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	TIB_lag -> TST_lag [label="" arrowhead=odot arrowtail=odot color=black dir=both]
+	TST_lag -> TST [label="0.414
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	alcohol_bev_lag -> alcohol_bev [label="0.651
+0.000" arrowhead=normal arrowtail=odot color=green dir=both]
+	worry_scale_lag -> worry_scale [label="0.813
+0.000" arrowhead=normal arrowtail=none color=green dir=both]
+	PANAS_NA [fillcolor=lightpink style=filled]
+	PANAS_NA_lag [fillcolor=lightpink style="filled,dotted"]
+	PANAS_PA [fillcolor=lightgreen style=filled]
+	PANAS_PA_lag [fillcolor=lightgreen style="filled,dotted"]
+	PHQ9_lag [style=dotted]
+	TIB_lag [style=dotted]
+	TST_lag [style=dotted]
+	alcohol_bev [fillcolor=purple fontcolor=white shape=box style=filled]
+	alcohol_bev_lag [fillcolor=purple fontcolor=white shape=box style=filled]
+	worry_scale_lag [style=dotted]
+	PANAS_NA [pos="1.8085,6.25!"]
+	PANAS_NA_lag [pos="1.8085,4.25!"]
+	PHQ9 [pos="4.5446,4.25!"]
+	worry_scale [pos="1.7251,0.25!"]
+	worry_scale_lag [pos="1.7251,2.25!"]
+	PANAS_PA [pos="4.7251,2.25!"]
+	PANAS_PA_lag [pos="7.5585,0.25!"]
+	PHQ9_lag [pos="4.5446,6.25!"]
+	TIB [pos="9.9612,4.25!"]
+	TST [pos="10.975,2.25!"]
+	TIB_lag [pos="10.85,6.25!"]
+	TST_lag [pos="11.989,4.25!"]
+	alcohol_bev_lag [pos="14.545,6.25!"]
+	alcohol_bev [pos="14.545,4.25!"]
+	overlap=false splines=true
+	ratio=fill size="10,8!"
+	fontsize=14 label="PD=2.0" labelloc=t
+}

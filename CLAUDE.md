@@ -12,7 +12,7 @@ fastcausal is a unified Python package for causal discovery analysis, combining:
 
 ```
 fastcausal  (this package — user-facing API + CLI)
-   ├── tetrad-port  (dependency — C++ algorithms: PC, FGES, GFCI)
+   ├── tetrad-port  (dependency — C++ algorithms: PC, FGES, GFCI, BOSS, BOSS-FCI, GRaSP, GRaSP-FCI)
    └── dgraph_flex  (dependency — graph rendering)
 ```
 
