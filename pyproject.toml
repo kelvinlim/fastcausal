@@ -63,6 +63,7 @@ Issues = "https://github.com/kelvinlim/fastcausal/issues"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["fastcausal*"]
+exclude = [".venv*", "tests*", "docs*", "examples*", "build*", "dist*", "tetrad-port*", "cda_tools2*", "dgraph_flex*"]
 
 [tool.setuptools.package-data]
 "fastcausal" = ["data/*.csv", "data/*.txt"]
