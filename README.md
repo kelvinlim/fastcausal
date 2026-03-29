@@ -227,4 +227,4 @@ If you use fastcausal in your research, please cite the relevant algorithm paper
 
 The bundled "boston" EMA dataset is from:
 
-> Lim KO et al. "Ecological momentary assessment of alcohol use and related constructs in veterans with PTSD." *J Dual Diagn.* 2021. https://pubmed.ncbi.nlm.nih.gov/33863920/
+> Cunningham TJ, Fields EC, Kensinger EA. "Boston College daily sleep and well-being survey data during early phase of the COVID-19 pandemic." *Sci Data.* 2021. https://www.nature.com/articles/s41597-021-00886-y
