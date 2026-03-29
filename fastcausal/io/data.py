@@ -21,6 +21,13 @@ def load_sample(name: str = "boston") -> pd.DataFrame:
     name : str
         Dataset name. Currently available: "boston".
 
+        The "boston" dataset contains daily EMA (Ecological Momentary
+        Assessment) measurements (alcohol use, sleep, mood) from:
+
+        Lim KO et al. "Ecological momentary assessment of alcohol use and
+        related constructs in veterans with PTSD." *J Dual Diagn.* 2021.
+        https://pubmed.ncbi.nlm.nih.gov/33863920/
+
     Returns
     -------
     pd.DataFrame
