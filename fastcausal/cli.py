@@ -6,9 +6,11 @@ Provides commands: parse, run, paths, report, analyze.
 
 import click
 
+from fastcausal import __version__
+
 
 @click.group()
-@click.version_option()
+@click.version_option(version=__version__)
 def main():
     """fastcausal - Fast, easy-to-use causal discovery analysis tools."""
     pass
