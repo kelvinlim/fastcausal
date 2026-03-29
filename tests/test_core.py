@@ -72,7 +72,13 @@ class TestSearch:
             sample_df, algorithm="fges", run_sem=True
         )
         assert "edges" in results
-        if results["edges"]:
+        # SEM only runs when directed edges (-->, o->) are present;
+        # undirected (---) and bidirected (<->) edges are excluded from the
+        # lavaan model by default since they represent latent confounding.
+        has_directed = any(
+            "-->" in e or "o->" in e for e in results["edges"]
+        )
+        if has_directed:
             assert "sem_results" in results
 
     def test_run_search_with_knowledge(self, fc, sample_df):

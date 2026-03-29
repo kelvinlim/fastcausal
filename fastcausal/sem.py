@@ -14,6 +14,7 @@ from dgraph_flex import DgraphFlex
 def edges_to_lavaan(
     edges: list[str],
     include_types: Optional[list[str]] = None,
+    include_covariances: bool = False,
 ) -> str:
     """
     Convert a list of edge strings to a lavaan/semopy model string.
@@ -24,6 +25,15 @@ def edges_to_lavaan(
         Edge strings like 'X --> Y', 'A o-> B'.
     include_types : list of str or None
         Edge types to include as regression paths. Default: ['-->', 'o->'].
+    include_covariances : bool
+        If True, include ``---`` and ``<->`` edges as covariance (``~~``)
+        terms. Default is False because PAG algorithms (GFCI, BOSS-FCI,
+        GRaSP-FCI) use these edge types to indicate possible latent
+        confounding, which cannot be properly represented as simple
+        covariances in semopy's basic Model. Including them can also cause
+        solver convergence failures (SLSQP "Inequality constraints
+        incompatible") when the free covariance parameters conflict with
+        variance constraints already implied by the regression structure.
 
     Returns
     -------
@@ -47,7 +57,7 @@ def edges_to_lavaan(
             regressions.setdefault(node2, []).append(node1)
         elif edge_type == "<--":
             regressions.setdefault(node1, []).append(node2)
-        elif edge_type in ("---", "<->"):
+        elif include_covariances and edge_type in ("---", "<->"):
             covariances.append((node1, node2))
 
     lines = []

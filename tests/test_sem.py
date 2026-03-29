@@ -9,9 +9,14 @@ class TestEdgesToLavaan:
         model = edges_to_lavaan(edges)
         assert "Y ~ X + Z" in model
 
-    def test_bidirected_covariance(self):
+    def test_bidirected_covariance_excluded_by_default(self):
         edges = ["X <-> Y"]
         model = edges_to_lavaan(edges)
+        assert "X ~~ Y" not in model
+
+    def test_bidirected_covariance_opt_in(self):
+        edges = ["X <-> Y"]
+        model = edges_to_lavaan(edges, include_covariances=True)
         assert "X ~~ Y" in model
 
     def test_o_arrow_included_by_default(self):
@@ -28,7 +33,12 @@ class TestEdgesToLavaan:
     def test_empty_edges(self):
         assert edges_to_lavaan([]) == ""
 
-    def test_undirected_as_covariance(self):
+    def test_undirected_covariance_excluded_by_default(self):
         edges = ["X --- Y"]
         model = edges_to_lavaan(edges)
+        assert "X ~~ Y" not in model
+
+    def test_undirected_covariance_opt_in(self):
+        edges = ["X --- Y"]
+        model = edges_to_lavaan(edges, include_covariances=True)
         assert "X ~~ Y" in model
