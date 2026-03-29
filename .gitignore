@@ -36,3 +36,7 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# MkDocs
+site/
+.cache/

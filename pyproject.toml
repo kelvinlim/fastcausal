@@ -47,8 +47,13 @@ batch = [
     "pillow>=10.0",
 ]
 all = ["fastcausal[sem,jupyter,batch]"]
+docs = [
+    "mkdocs-material>=9.0",
+    "mkdocstrings[python]>=0.24",
+    "mkdocs-jupyter>=0.24",
+]
 dev = [
-    "fastcausal[all]",
+    "fastcausal[all,docs]",
     "pytest>=7.0",
 ]
 
