@@ -57,30 +57,46 @@ fc.save_graph(graph, "my_result", plot_format="png")
 from fastcausal import FastCausal
 
 fc = FastCausal()
-df = fc.load_csv("my_data.csv")
 
-# Add lagged columns for time-series analysis
-df = fc.add_lag_columns(df)
-df = fc.standardize(df)
+# Load bundled EMA dataset (alcohol, sleep, mood)
+df = fc.load_sample("boston")
 
-# Create temporal prior knowledge
-knowledge = fc.create_lag_knowledge(df.columns)
+# Add lagged columns and standardize
+lag_stub = "_lag"
+df_lag = fc.add_lag_columns(df, lag_stub=lag_stub)
+df_std = fc.standardize(df_lag)
 
-# Run stability analysis (bootstrapped)
-results, graph = fc.run_stability(
-    df,
+# Build temporal prior knowledge explicitly:
+# Tier 0 (lag vars) can only be parents of Tier 1 (current-day vars)
+cols = df.columns
+knowledge = {
+    "addtemporal": {
+        0: [col + lag_stub for col in cols],
+        1: [col for col in cols],
+    }
+}
+
+# Run GFCI causal discovery
+result, graph = fc.run_search(
+    df_std,
     algorithm="gfci",
+    alpha=0.01,
+    penalty_discount=1.0,
     knowledge=knowledge,
-    runs=100,
-    min_fraction=0.75,
 )
 
 # Visualize with custom node styles
-fc.show_graph(graph, node_styles=[
-    {"pattern": "*_lag", "shape": "box", "fillcolor": "lightyellow"},
-    {"pattern": "PANAS_*", "fillcolor": "lightblue"},
-])
+node_styles = [
+    {"pattern": "*_lag",        "style": "dotted"},
+    {"pattern": "PANAS_PA*",    "style": "filled", "fillcolor": "lightgreen"},
+    {"pattern": "PANAS_NA*",    "style": "filled", "fillcolor": "lightpink"},
+    {"pattern": "alcohol_bev*", "shape": "box", "style": "filled",
+     "fillcolor": "purple", "fontcolor": "white"},
+]
+fc.show_graph(graph, node_styles=node_styles)
 ```
+
+See [`fastcausal_demo_short.ipynb`](fastcausal_demo_short.ipynb) for the full interactive demo.
 
 ## CLI Usage
 
