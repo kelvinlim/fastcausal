@@ -67,6 +67,13 @@ knowledge = {
         1: [col for col in cols],
     }
 }
+# knowledge =>
+# {"addtemporal": {
+#     0: ["alcohol_bev_lag", "TIB_lag", "TST_lag", "PANAS_PA_lag",
+#         "PANAS_NA_lag", "worry_scale_lag", "PHQ9_lag"],
+#     1: ["alcohol_bev", "TIB", "TST", "PANAS_PA",
+#         "PANAS_NA", "worry_scale", "PHQ9"]
+# }}
 
 # Run GFCI causal discovery with SEM fitting
 result, graph = fc.run_search(
