@@ -45,7 +45,7 @@ results, graph = fc.run_search(df, algorithm="gfci", alpha=0.01, penalty_discoun
 fc.show_graph(graph)
 ```
 
-![Quick start graph](assets/quickstart_graph.png)
+![Quick start graph](https://raw.githubusercontent.com/kelvinlim/fastcausal/main/assets/quickstart_graph.png)
 
 ### Time-series workflow with prior knowledge
 
@@ -100,7 +100,7 @@ node_styles = [
 fc.show_graph(graph, node_styles=node_styles)
 ```
 
-![Styled causal graph with SEM edge weights](assets/styled_graph.png)
+![Styled causal graph with SEM edge weights](https://raw.githubusercontent.com/kelvinlim/fastcausal/main/assets/styled_graph.png)
 
 See [`fastcausal_demo_short.ipynb`](fastcausal_demo_short.ipynb) for the full interactive demo.
 

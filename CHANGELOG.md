@@ -2,6 +2,11 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.5] - 2026-03-29
+
+### Fixed
+- **README images on PyPI** — use absolute GitHub raw URLs so graph images render on pypi.org (not just on GitHub)
+
 ## [0.1.4] - 2026-03-29
 
 ### Added
