@@ -40,6 +40,7 @@ from fastcausal import FastCausal
 
 fc = FastCausal()
 df = fc.load_sample("boston")          # bundled EMA dataset
+df = fc.standardize(df)
 results, graph = fc.run_search(df, algorithm="gfci", alpha=0.01, penalty_discount=1.0)
 fc.show_graph(graph)
 ```
