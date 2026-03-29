@@ -63,15 +63,81 @@ PREP:
 
   # overwrite_prior: true      # regenerate prior.txt each run (default: true)
 
-  # Global processing steps (applied to entire dataset)
-  # steps_global:
-  #   - step_name: "filter_dates"
-  #     params: { start: "2024-01-01", end: "2024-12-31" }
+  # Processing steps are applied in order. Use steps_global for the entire
+  # dataset (before splitting by case) and steps_case for per-case processing.
+  # Each step has an 'op' (operation name) and an optional 'arg'.
+  #
+  # Available operations:
+  #
+  #   ── Column operations ──
+  #   - op: keep                       # keep only these columns
+  #     arg: [col1, col2, col3]
+  #   - op: drop                       # drop these columns
+  #     arg: [col_to_remove]
+  #   - op: rename                     # rename columns
+  #     arg: { old_name: new_name }
+  #
+  #   ── Row operations ──
+  #   - op: sort                       # sort rows by column
+  #     arg: date
+  #   - op: query                      # filter rows (pandas query syntax)
+  #     arg: "age > 18 and status == 'active'"
+  #   - op: droprows                   # drop rows where column has these values
+  #     arg: { status: [invalid, test] }
+  #   - op: keeprows                   # keep only rows where column has these values
+  #     arg: { group: [treatment, control] }
+  #
+  #   ── Missing data ──
+  #   - op: missing_value              # handle missing values globally
+  #     arg: drop                      #   "drop" = remove rows with any NaN
+  #                                    #   "pad"  = forward-fill NaNs
+  #   - op: missing_value_columns      # fill NaNs per column with a specific value
+  #     arg: { score: 0, rating: 3.0 }
+  #
+  #   ── Value transformations ──
+  #   - op: recode                     # remap values (all values must be mapped)
+  #     arg:
+  #       severity: { "none": 0, "mild": 1, "moderate": 2, "severe": 3 }
+  #   - op: replace_values             # replace specific values (others unchanged)
+  #     arg:
+  #       score: { -99: null, -88: null }
+  #   - op: reverse                    # reverse-score: new = max_val - old
+  #     arg: { neg_item1: 5, neg_item2: 5 }
+  #
+  #   ── Computed columns ──
+  #   - op: sum_columns                # create column as sum of others
+  #     arg: { name: total, columns: [item1, item2, item3] }
+  #   - op: mean_columns               # create column as mean of others
+  #     arg: { name: avg_mood, columns: [happy, calm, relaxed] }
+  #   - op: max_columns                # create column as max of others
+  #     arg: { name: worst_symptom, columns: [pain, fatigue, nausea] }
+  #
+  #   ── Causal prep ──
+  #   - op: add_lag                    # add lagged columns (suffix '_lag')
+  #   - op: standardize                # z-score standardize all numeric columns
+  #
+  #   ── Output ──
+  #   - op: save                       # save current state to CSV
+  #     arg:
+  #       dir: data                    #   output directory (relative to project)
+  #       stub: .csv                   #   filename suffix: {case_label}{stub}
+  #       min_rows: 40                 #   skip save if fewer rows than this
 
-  # Per-case processing steps
+  # Global processing steps (applied to entire dataset before case split)
+  # steps_global:
+  #   - op: sort
+  #     arg: date
+  #   - op: keep
+  #     arg: [id, date, mood, sleep, activity]
+  #   - op: missing_value
+  #     arg: drop
+
+  # Per-case processing steps (applied to each case after splitting by 'id')
   # steps_case:
-  #   - step_name: "add_lags"
-  #     params: { n_lags: 1 }
+  #   - op: add_lag
+  #   - op: standardize
+  #   - op: save
+  #     arg: { dir: data, stub: .csv, min_rows: 40 }
 
 # ─── Causal discovery ('fastcausal run') ────────────────────────────
 CAUSAL:
