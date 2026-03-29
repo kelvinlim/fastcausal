@@ -33,34 +33,25 @@ pip install fastcausal[all]       # everything
 
 ## Quick Start
 
+Five lines to your first causal graph:
+
 ```python
 from fastcausal import FastCausal
 
 fc = FastCausal()
-
-# Load data
-df = fc.load_sample("boston")
-
-# Run causal discovery
+df = fc.load_sample("boston")          # bundled EMA dataset
 results, graph = fc.run_search(df, algorithm="gfci", alpha=0.05)
-
-# View the graph
 fc.show_graph(graph)
-
-# Save to file
-fc.save_graph(graph, "my_result", plot_format="png")
 ```
 
-## Interactive Workflow
+![Quick start graph](assets/quickstart_graph.png)
+
+### Time-series workflow with prior knowledge
+
+For time-series data, add lagged columns, standardize, and encode temporal
+ordering so that yesterday's values can only be causes (not effects) of today's:
 
 ```python
-from fastcausal import FastCausal
-
-fc = FastCausal()
-
-# Load bundled EMA dataset (alcohol, sleep, mood)
-df = fc.load_sample("boston")
-
 # Add lagged columns and standardize
 lag_stub = "_lag"
 df_lag = fc.add_lag_columns(df, lag_stub=lag_stub)
@@ -76,7 +67,7 @@ knowledge = {
     }
 }
 
-# Run GFCI causal discovery
+# Run GFCI causal discovery with SEM fitting
 result, graph = fc.run_search(
     df_std,
     algorithm="gfci",
@@ -95,6 +86,8 @@ node_styles = [
 ]
 fc.show_graph(graph, node_styles=node_styles)
 ```
+
+![Styled causal graph with SEM edge weights](assets/styled_graph.png)
 
 See [`fastcausal_demo_short.ipynb`](fastcausal_demo_short.ipynb) for the full interactive demo.
 
