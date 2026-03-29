@@ -49,6 +49,10 @@ pytest tests/ -v
 - Edge types: `-->`, `o->`, `o-o`, `<->`, `---` (Tetrad conventions)
 - SEM includes both `-->` and `o->` edges by default
 
+## Important Rules
+
+- **Never fabricate citations or references.** Always fetch and verify the actual paper details (title, authors, journal) from the URL before writing a citation. Do not guess or generate plausible-sounding references from memory.
+
 ## Key Design Decisions
 
 - No Java dependency — all algorithms run via tetrad-port C++ bindings
