@@ -53,6 +53,11 @@ For time-series data, add lagged columns, standardize, and encode temporal
 ordering so that yesterday's values can only be causes (not effects) of today's:
 
 ```python
+from fastcausal import FastCausal
+
+fc = FastCausal()
+df = fc.load_sample("boston")
+
 # Add lagged columns and standardize
 lag_stub = "_lag"
 df_lag = fc.add_lag_columns(df, lag_stub=lag_stub)
