@@ -289,6 +289,119 @@ def report(config, mode, stub):
     run_report(cfg, mode=mode, stub=stub)
 
 
+@main.group()
+def varlist():
+    """Inspect columns and data quality of a CSV/Excel file."""
+    pass
+
+
+@varlist.command()
+@click.argument("datafile", type=click.Path(exists=True))
+@click.option("--indent", default=8, type=int, help="Number of leading spaces")
+@click.option("--lag-suffix", default="_", help="Suffix indicating a lag column")
+def cols(datafile, indent, lag_suffix):
+    """List columns in formats suitable for config files."""
+    import numpy as np
+    import pandas as pd
+
+    df = _read_datafile(datafile)
+    columns = [c for c in df.columns if c != "Unnamed: 0"]
+    sp = " " * indent
+
+    click.echo("── YAML list (- var) ──")
+    for var in columns:
+        click.echo(f"{sp}- {var}")
+
+    click.echo("\n── Plain list ──")
+    for var in columns:
+        click.echo(f"{sp}{var}")
+
+    click.echo("\n── Comma-separated ──")
+    for var in columns:
+        click.echo(f"{sp}{var},")
+
+    click.echo("\n── With lag pairs ──")
+    for var in columns:
+        if var[-1] != lag_suffix:
+            click.echo(f"{sp}{var},")
+            click.echo(f"{sp}{var}{lag_suffix},")
+
+    click.echo("\n── Rename section ──")
+    click.echo("    -\n        op: rename\n        arg:")
+    for var in columns:
+        click.echo(f"{sp}{var}: {var}")
+
+    click.echo("\n── Prior knowledge file ──")
+    click.echo("/knowledge\n")
+    click.echo("addtemporal")
+    click.echo("1 " + " ".join(f"{v}_lag" for v in columns))
+    click.echo("2 " + " ".join(columns))
+    click.echo("\nforbiddirect\n\nrequiredirect\n")
+
+
+@varlist.command()
+@click.argument("datafile", type=click.Path(exists=True))
+@click.option("--thresh", default=0, type=int, help="Completeness threshold %% to save filtered file (0 = skip)")
+def check(datafile, thresh):
+    """Check data quality: null counts and threshold-based column filtering."""
+    import os
+
+    import numpy as np
+    import pandas as pd
+
+    df = _read_datafile(datafile)
+    columns = [c for c in df.columns if c != "Unnamed: 0"]
+    df = df[columns]
+
+    # Per-column completeness
+    results = []
+    for col in columns:
+        total = len(df[col])
+        clean = df[col].dropna().shape[0]
+        results.append({"column": col, "total": total, "clean": clean, "percent": clean / total * 100.0})
+
+    summary = pd.DataFrame(results)
+    summ_path = datafile.rsplit(".", 1)[0] + "_colsumm.csv"
+    summary.to_csv(summ_path, index=False)
+    click.echo(f"Column summary saved to: {summ_path}")
+
+    # Threshold sweep
+    for t in range(50, 105, 5):
+        keep_cols = summary.loc[summary["percent"] >= t, "column"].tolist()
+        cleaned = df[keep_cols].dropna()
+        pct_rows = len(cleaned) / len(df) * 100
+        click.echo(f"  thresh:{t:3d}  rows:{len(cleaned):>6d}/{len(df)}  ({pct_rows:5.1f}%)  cols:{len(keep_cols)}")
+
+    # Save filtered file at requested threshold
+    if thresh > 0:
+        keep_cols = summary.loc[summary["percent"] >= thresh, "column"].tolist()
+        cleaned = df[keep_cols].dropna()
+        out_path = datafile.rsplit(".", 1)[0] + f"_thresh{thresh}.csv"
+        cleaned.to_csv(out_path, index=False)
+        click.echo(f"\nFiltered data saved to: {out_path}")
+        click.echo(f"Columns kept at {thresh}% threshold:")
+        for col in keep_cols:
+            click.echo(f"        - {col}")
+
+
+def _read_datafile(path):
+    """Read a CSV or Excel file into a DataFrame."""
+    import os
+
+    import numpy as np
+    import pandas as pd
+
+    ext = os.path.splitext(path)[1].lower()
+    if ext == ".csv":
+        df = pd.read_csv(path, encoding="Latin-1")
+    elif ext in (".xlsx", ".xls"):
+        df = pd.read_excel(path, engine="openpyxl")
+    else:
+        raise click.ClickException(f"Unsupported file type: {ext}. Use .csv or .xlsx")
+    df.replace("#NULL!", np.nan, inplace=True)
+    return df
+
+
 @main.command()
 @click.argument("datafile", type=click.Path(exists=True))
 @click.option("--algorithm", default="gfci", type=click.Choice(["pc", "fges", "gfci"]), help="Causal discovery algorithm")

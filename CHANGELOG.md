@@ -2,6 +2,13 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.6] - 2026-03-30
+
+### Added
+- **`fastcausal varlist` CLI command group** — inspect columns and data quality of CSV/Excel files (ported from cda_tools2)
+  - `varlist cols` — list columns in YAML, plain, comma-separated, lag-pair, rename, and prior knowledge formats
+  - `varlist check` — per-column completeness summary, threshold sweep (50–100%), and optional filtered file export
+
 ## [0.1.5] - 2026-03-29
 
 ### Fixed
