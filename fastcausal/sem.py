@@ -96,7 +96,7 @@ def run_semopy(
     except ImportError:
         raise ImportError(
             "semopy is required for SEM fitting. "
-            "Install it with: pip install fastcausal[sem]"
+            "Install it with: pip install semopy"
         )
 
     try:

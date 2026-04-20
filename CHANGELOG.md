@@ -2,6 +2,12 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.7] - 2026-04-20
+
+### Changed
+- **Simplified installation** — `semopy`, Jupyter packages (`ipykernel`, `ipywidgets`, `ipython`, `matplotlib`, `seaborn`), and batch report dependencies (`python-docx`, `pillow`) are now part of the main `dependencies`. The `sem`, `jupyter`, `batch`, and `all` optional extras have been removed; `pip install fastcausal` now includes all features. `docs` and `dev` extras remain.
+- **Documentation** — README, docs/index, and migration guide updated to reflect the simpler install story.
+
 ## [0.1.6] - 2026-03-30
 
 ### Added

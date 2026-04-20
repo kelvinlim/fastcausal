@@ -30,21 +30,8 @@ No Java installation needed.
 pip install fastcausal
 ```
 
-With optional extras:
-
-```bash
-# SEM fitting
-pip install "fastcausal[sem]"
-
-# Jupyter notebook support
-pip install "fastcausal[jupyter]"
-
-# Batch processing (Word reports)
-pip install "fastcausal[batch]"
-
-# Everything
-pip install "fastcausal[all]"
-```
+All features — SEM fitting (semopy), Jupyter/matplotlib/seaborn support, and
+Word report generation — are included by default.
 
 ---
 

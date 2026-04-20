@@ -39,7 +39,7 @@ def run_report(
     except ImportError:
         raise ImportError(
             "python-docx is required for report generation. "
-            "Install with: pip install fastcausal[batch]"
+            "Install with: pip install python-docx"
         )
 
     output_dir = get_output_dir(cfg)

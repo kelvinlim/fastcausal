@@ -10,8 +10,9 @@ pip install fastcda
 
 # New
 pip install fastcausal
-pip install "fastcausal[all]"   # include SEM, Jupyter, batch extras
 ```
+
+SEM fitting, Jupyter support, and batch report generation are all included by default.
 
 ## API mapping
 

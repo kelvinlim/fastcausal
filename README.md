@@ -24,12 +24,10 @@ Key features:
 ## Installation
 
 ```bash
-pip install fastcausal            # core package
-pip install fastcausal[sem]       # + SEM fitting (semopy)
-pip install fastcausal[jupyter]   # + Jupyter/matplotlib/seaborn
-pip install fastcausal[batch]     # + Word report generation
-pip install fastcausal[all]       # everything
+pip install fastcausal
 ```
+
+All features — SEM fitting, Jupyter/matplotlib/seaborn, and Word report generation — are included by default.
 
 ## Quick Start
 
