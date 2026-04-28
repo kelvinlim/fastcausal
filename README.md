@@ -29,6 +29,44 @@ pip install fastcausal
 
 All features — SEM fitting, Jupyter/matplotlib/seaborn, and Word report generation — are included by default.
 
+### Conda install (Miniforge3 recommended)
+
+For reproducible environments (especially for graph tooling and notebooks), use the repository's `environment.yml` with Miniforge3.
+
+1. Install Miniforge3 (conda-forge based):
+
+- Windows (PowerShell via winget):
+
+```powershell
+winget install --id CondaForge.Miniforge3 -e
+```
+
+- macOS/Linux (or if you prefer manual installers):
+    Download the correct installer from:
+    https://github.com/conda-forge/miniforge/releases/latest
+
+2. Open a new terminal so `conda` is available, then create and activate the environment:
+
+    ```bash
+    conda env create -f environment.yml
+    conda activate fastcausal_env
+    ```
+
+    The environment file already installs `fastcausal` via pip and the Graphviz binaries required to create/render graphs.
+
+    If you are developing from this repository, replace the PyPI install with an editable install:
+
+    ```bash
+    pip uninstall -y fastcausal
+    pip install -e .
+    ```
+
+3. Optional sanity check:
+
+```bash
+python -c "import fastcausal; print(fastcausal.__version__)"
+```
+
 ## Quick Start
 
 Five lines to your first causal graph:

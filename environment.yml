@@ -1,0 +1,11 @@
+name: fastcausal_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.13
+  - graphviz
+  - python-graphviz
+  - pip
+  - pip:
+    - fastcausal
