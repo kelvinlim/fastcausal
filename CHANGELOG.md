@@ -2,6 +2,21 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.9] - 2026-05-20
+
+### Fixed
+- **Ancestor traversal now respects PAG/CPDAG edge semantics** — `get_ancestor_subgraph()` and `get_ancestors()` no longer treat bidirected (`<->`) edges as ancestral. A `<->` edge encodes a latent common cause, so neither endpoint is an ancestor of the other; walking it produced spurious "ancestors" (e.g. a sink node whose only edge was `<->` would wrongly appear in an ancestor subgraph).
+
+### Added
+- **`mode` parameter on `get_ancestor_subgraph()` and `get_ancestors()`** (default `"possible"`):
+  - `"possible"` — walks `-->` and `o->` from source to target, and `---` / `o-o` in both directions (orientation unidentified); `<->` is never walked. Yields nodes that *could* be ancestors in some DAG consistent with the PAG.
+  - `"definite"` — walks only `-->`. Yields nodes that *must* be ancestors in every consistent DAG.
+
+## [0.1.8] - 2026-04-28
+
+### Added
+- **Miniforge/conda install instructions** and an `environment.yml` for reproducible conda environments (README and docs/index).
+
 ## [0.1.7] - 2026-04-20
 
 ### Changed

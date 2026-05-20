@@ -159,6 +159,45 @@ fc.show_graph(graph, node_styles=node_styles)
 
 ---
 
+## Graph Metrics
+
+### Ancestor subgraphs
+
+To focus on what a graph implies about the potential causes of a variable,
+extract the subgraph of a target node and its ancestors:
+
+```python
+from fastcausal.pipeline.metrics import get_ancestor_subgraph
+
+# Ancestors of TST (total sleep time), plus TST itself
+tst_graph = get_ancestor_subgraph(graph, ["TST"])
+fc.show_graph(tst_graph)
+```
+
+Ancestor traversal follows PAG/CPDAG edge semantics. The `mode` parameter
+controls how ambiguous edges are interpreted:
+
+| Edge | `mode="possible"` (default) | `mode="definite"` |
+|------|------------------------------|--------------------|
+| `X --> Y` | `X` is an ancestor of `Y` | `X` is an ancestor of `Y` |
+| `X o-> Y` | `X` *may* be an ancestor of `Y` | not walked |
+| `X --- Y`, `X o-o Y` | either direction (orientation unidentified) | not walked |
+| `X <-> Y` | never walked (latent common cause) | never walked |
+
+- `"possible"` yields nodes that *could* be ancestors in some DAG consistent
+  with the PAG — the more useful default for "what might cause this variable?"
+- `"definite"` yields nodes that *must* be ancestors in every consistent DAG.
+
+```python
+# Only definite (-->) ancestors
+tst_graph = get_ancestor_subgraph(graph, ["TST"], mode="definite")
+```
+
+A `<->` edge encodes a latent common cause, so **neither** endpoint is an
+ancestor of the other — it is never followed under either mode.
+
+---
+
 ## Results Dict
 
 `run_search()` and `run_stability()` return `(results, graph)`.
