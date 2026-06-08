@@ -2,6 +2,11 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.10] - 2026-06-07
+
+### Changed
+- **`environment.yml`** — added `networkx` to the pip dependencies so conda environments include it.
+
 ## [0.1.9] - 2026-05-20
 
 ### Fixed
