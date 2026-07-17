@@ -31,17 +31,10 @@ For reproducible environments (especially for graph tooling and notebooks), use 
 
 1. Install Miniforge3 (conda-forge based):
 
-- Windows (PowerShell via winget):
-
-```powershell
-winget install --id CondaForge.Miniforge3 -e
-```
-
-- macOS/Linux (or if you prefer manual installers):
-    Download the correct installer from:
+    Download and run the  installer for your platform (Windows/Linux/MacOSX) from:
     https://github.com/conda-forge/miniforge/releases/latest
 
-2. Open a new terminal so `conda` is available, then create and activate the environment:
+2. Open a new terminal/powershell so `conda` is available, then create and activate the environment:
 
     ```bash
     conda env create -f environment.yml
