@@ -18,14 +18,10 @@ Key features:
 - **Bootstrapped stability analysis** — edge frequency selection across subsampled runs
 - **SEM fitting** — automatic structural equation modeling via semopy
 - **Flexible graph visualization** — node styling with fnmatch patterns, multi-graph comparison with shared layouts
-- **Batch pipeline** — config-driven processing of hundreds of cases via CLI
-- **Report generation** — automated Word document reports with embedded graphs
+- **Batch pipeline** — config-driven processing of hundreds of cases via CLI (in alpha)
+- **Report generation** — automated Word document reports with embedded graphs (in alpha)
 
 ## Installation
-
-```bash
-pip install fastcausal
-```
 
 All features — SEM fitting, Jupyter/matplotlib/seaborn, and Word report generation — are included by default.
 
