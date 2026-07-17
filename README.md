@@ -34,7 +34,9 @@ For reproducible environments (especially for graph tooling and notebooks), use 
     Download and run the  installer for your platform (Windows/Linux/MacOSX) from:
     https://github.com/conda-forge/miniforge/releases/latest
 
-2. Open a new terminal/powershell so `conda` is available, then create and activate the environment:
+    On Windows machines where you don't have Administrator privileges, on the miniforge install, select "Just Me"
+
+3. Open a new terminal/powershell so `conda` is available, then create and activate the environment:
 
     ```bash
     conda env create -f environment.yml
@@ -50,7 +52,7 @@ For reproducible environments (especially for graph tooling and notebooks), use 
     pip install -e .
     ```
 
-3. Optional sanity check:
+4. Optional sanity check:
 
 ```bash
 python -c "import fastcausal; print(fastcausal.__version__)"
