@@ -2,6 +2,11 @@
 
 All notable changes to fastcausal are documented in this file.
 
+## [0.1.11] - 2026-07-29
+
+### Changed
+- **`Knowledge` is now imported from tetrad-port's public API** — `fastcausal/knowledge.py` previously imported it from `tetrad_port._tetrad_cpp`, the compiled extension module. `tetrad_port.Knowledge` is the same class object and is already part of tetrad-port's public exports, so behaviour is unchanged; the private import meant a rename or restructuring of tetrad-port's C++ binding would have broken fastcausal even though the public API had not changed.
+
 ## [0.1.10] - 2026-06-07
 
 ### Changed

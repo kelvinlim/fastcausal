@@ -6,7 +6,7 @@ Converts user-facing dict format to tetrad-port Knowledge objects.
 
 from typing import Optional
 
-from tetrad_port._tetrad_cpp import Knowledge
+from tetrad_port import Knowledge
 
 
 def create_lag_knowledge(
